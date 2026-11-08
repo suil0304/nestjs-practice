@@ -1,4 +1,4 @@
-import { Injectable, NotImplementedException, Param } from '@nestjs/common';
+import { Injectable, NotImplementedException, PipeTransform } from '@nestjs/common';
 import { v1 } from 'uuid';
 import { EmailService } from '../email/email.service.js';
 import { UserInfo } from './entities/user-info.entity.js';
@@ -56,6 +56,7 @@ export class UsersService {
         signUpVerifyToken:string
     ):Promise<void> {
         // TODO: DB 추가할 때 이어서 구현하세요
+        await this.__sendMemberJoinEmail(email, signUpVerifyToken);
     }
 
     private async __sendMemberJoinEmail(email:string, signUpVerifyToken:string) {
