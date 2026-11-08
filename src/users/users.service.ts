@@ -1,4 +1,4 @@
-import { Injectable, NotImplementedException, PipeTransform } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 import { v1 } from 'uuid';
 import { EmailService } from '../email/email.service.js';
 import { UserInfo } from './entities/user-info.entity.js';
