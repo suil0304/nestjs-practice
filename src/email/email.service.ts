@@ -1,17 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable } from '@nestjs/common';
+import { type ConfigType } from '@nestjs/config';
 import { createTransport, Mail } from "nodemailer";
+import emailConfig from '../configs/email.config.js';
 
 @Injectable()
 export class EmailService {
     private __transporter:Mail;
 
-    constructor(private readonly __configService:ConfigService) {
+    constructor(@Inject(emailConfig.KEY) private readonly __config:ConfigType<typeof emailConfig>) {
         this.__transporter = createTransport({
-            service: this.__configService.getOrThrow("email.service"),
+            service: this.__config.service,
             auth: {
-                user: this.__configService.getOrThrow("email.auth.name"),
-                pass: this.__configService.getOrThrow("email.auth.password")
+                user: this.__config.auth.name,
+                pass: this.__config.auth.password
             }
         });
     }
@@ -19,7 +20,7 @@ export class EmailService {
     async sendMemberJoinVerification(email:string, signUpVerifyToken:string) {
         const baseUrl = "http://localhost:3000";
 
-        const url = `${baseUrl}/users/email-verify?signUpVerifiyToken=${signUpVerifyToken}`;
+        const url = `${baseUrl}/users/email-verify?signUpVerifyToken=${signUpVerifyToken}`;
 
         return this.__transporter.sendMail({
             to: email,
